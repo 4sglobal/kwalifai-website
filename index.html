@@ -9,25 +9,32 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 </head>
 <body>
-    <!-- Floating Rate Banner - FIXED positioning -->
-    <div id="rate-banner" class="rate-banner rate-banner--hidden">
+    <!-- Floating Rate Banner -->
+    <div id="rate-banner" class="rate-banner">
         <div class="rate-banner__content">
             <div class="rate-banner__header">
-                <span class="rate-banner__title">Today's Rates</span>
+                <span class="rate-banner__title">🏠 Today's Rates - Updated Live</span>
                 <button class="rate-banner__close" id="close-banner" aria-label="Close rate banner">×</button>
             </div>
             <div class="rate-banner__rates" id="rate-display">
                 <div class="rate-item">
                     <span class="rate-product">30-Year Fixed</span>
                     <span class="rate-value">7.125%</span>
+                    <span class="rate-apr">APR 7.250%</span>
                 </div>
                 <div class="rate-item">
                     <span class="rate-product">15-Year Fixed</span>
                     <span class="rate-value">6.750%</span>
+                    <span class="rate-apr">APR 6.875%</span>
+                </div>
+                <div class="rate-item">
+                    <span class="rate-product">FHA 30-Year</span>
+                    <span class="rate-value">6.875%</span>
+                    <span class="rate-apr">APR 7.125%</span>
                 </div>
             </div>
             <div class="rate-banner__disclaimer">
-                Sample rates for informational purposes only. NMLS ID: 1666674
+                Sample rates for qualified borrowers. NMLS ID: 1666674 | Call (555) 123-4567
             </div>
         </div>
     </div>
@@ -37,19 +44,24 @@
         <div class="container">
             <div class="navbar__content">
                 <div class="navbar__brand">
-                    <div class="logo-placeholder">
-                        <h1 class="navbar__logo">Kwalifai</h1>
+                    <div class="logo-placeholder" id="logo-placeholder">
+                        <div class="logo-icon">🏠</div>
+                        <span class="logo-text">Logo Here</span>
                     </div>
-                    <span class="navbar__tagline">AI Powered-Human Backed</span>
+                    <div class="brand-info">
+                        <h1 class="navbar__logo">Kwalifai</h1>
+                        <span class="navbar__tagline">AI Powered-Human Backed</span>
+                    </div>
                 </div>
                 <div class="navbar__nav">
                     <button class="nav-link active" data-page="home">Home</button>
                     <button class="nav-link" data-page="news">News</button>
                     <button class="nav-link" data-page="about">About</button>
-                    <button class="nav-link" data-page="admin" id="admin-link">Admin</button>
+                    <button class="nav-link admin-link" data-page="admin">Admin</button>
                 </div>
                 <div class="navbar__actions">
-                    <button class="btn btn--primary" id="open-chat">Chat with Sarah</button>
+                    <button class="btn btn--outline" id="call-now">📞 (555) 123-4567</button>
+                    <button class="btn btn--primary" id="open-chat">💬 Chat with Sarah</button>
                 </div>
             </div>
         </div>
@@ -63,10 +75,15 @@
                 <div class="container">
                     <div class="hero__content">
                         <h1 class="hero__title">Qualify Fast. AI Powered.</h1>
-                        <p class="hero__subtitle">Get pre-qualified in minutes with Sarah, our sophisticated AI mortgage assistant backed by licensed loan officers with human handoff support.</p>
+                        <p class="hero__subtitle">Get pre-qualified in minutes with Sarah, our advanced AI mortgage specialist backed by licensed loan officers. NMLS ID: 1666674</p>
                         <div class="hero__actions">
-                            <button class="btn btn--primary btn--lg" id="start-application">Start Your Application</button>
-                            <button class="btn btn--outline btn--lg" id="learn-more">Learn More</button>
+                            <button class="btn btn--primary btn--lg" id="start-application">🚀 Start Your Application</button>
+                            <button class="btn btn--outline btn--lg" id="learn-more">📋 Learn More</button>
+                        </div>
+                        <div class="hero__trust-badges">
+                            <span class="trust-badge">🔐 Bank-Level Security</span>
+                            <span class="trust-badge">⚡ 40% Faster Processing</span>
+                            <span class="trust-badge">🏆 98% Customer Satisfaction</span>
                         </div>
                     </div>
                 </div>
@@ -78,18 +95,18 @@
                     <div class="features__grid">
                         <div class="feature-card">
                             <div class="feature-card__icon">🤖</div>
-                            <h3 class="feature-card__title">Advanced AI Processing</h3>
-                            <p class="feature-card__description">Sarah, our sophisticated AI agent, analyzes documents instantly with enterprise-grade accuracy and multi-session support.</p>
+                            <h3 class="feature-card__title">Sarah: Advanced AI Processing</h3>
+                            <p class="feature-card__description">Our sophisticated AI agent Sarah analyzes your documents instantly with 99.7% accuracy, reducing approval times by 40% while maintaining perfect compliance.</p>
                         </div>
                         <div class="feature-card">
                             <div class="feature-card__icon">👥</div>
-                            <h3 class="feature-card__title">Human Handoff System</h3>
-                            <p class="feature-card__description">Seamless transitions to licensed loan officers with queue management and live monitoring capabilities.</p>
+                            <h3 class="feature-card__title">Human-Backed Support</h3>
+                            <p class="feature-card__description">Licensed loan officers review every application and provide seamless handoff support. Real humans when you need them most.</p>
                         </div>
                         <div class="feature-card">
-                            <div class="feature-card__icon">📊</div>
-                            <h3 class="feature-card__title">Analytics & Management</h3>
-                            <p class="feature-card__description">Complete admin dashboard with user management, real-time monitoring, and comprehensive analytics.</p>
+                            <div class="feature-card__icon">⚡</div>
+                            <h3 class="feature-card__title">Lightning Fast Approvals</h3>
+                            <p class="feature-card__description">Get pre-qualified in under 3 minutes and close faster with our streamlined digital-first process. No more waiting weeks.</p>
                         </div>
                     </div>
                 </div>
@@ -98,8 +115,8 @@
             <div class="compliance-footer">
                 <div class="container">
                     <p class="compliance-text">
-                        NMLS ID: 1666674. Licensed loan officers available in all 50 states. 
-                        Equal Housing Lender. Rates subject to change without notice.
+                        🏛️ NMLS ID: 1666674 | Licensed loan officers available in all 50 states | Equal Housing Lender | 
+                        Rates subject to change without notice | All loans subject to credit approval
                     </p>
                 </div>
             </div>
@@ -109,19 +126,20 @@
         <section id="news-page" class="page">
             <div class="container">
                 <div class="news-header">
-                    <h1 class="page-title">Mortgage News</h1>
-                    <p class="page-subtitle">Stay informed with the latest mortgage market insights</p>
+                    <h1 class="page-title">📈 Mortgage Market News</h1>
+                    <p class="page-subtitle">Stay informed with AI-powered market insights and analysis</p>
                     
                     <div class="news-filters">
                         <button class="filter-btn active" data-filter="all">All News</button>
                         <button class="filter-btn" data-filter="market-updates">Market Updates</button>
                         <button class="filter-btn" data-filter="technology">Technology</button>
-                        <button class="filter-btn" data-filter="rates">Rates</button>
+                        <button class="filter-btn" data-filter="rates">Rate Analysis</button>
+                        <button class="filter-btn" data-filter="compliance">Compliance</button>
                     </div>
                 </div>
 
                 <div class="news-grid" id="news-grid">
-                    <!-- News articles populated by JavaScript -->
+                    <!-- News articles will be populated by JavaScript -->
                 </div>
             </div>
         </section>
@@ -133,14 +151,17 @@
                     <h1 class="page-title">About Kwalifai</h1>
                     <div class="about-grid">
                         <div class="about-text">
-                            <h2>Advanced AI-Powered Mortgage Solutions</h2>
-                            <p>At Kwalifai, we combine sophisticated artificial intelligence with human expertise to transform the mortgage experience. Our AI assistant Sarah handles complex document analysis and qualification processes, while our licensed loan officers provide personalized service with seamless handoff capabilities.</p>
+                            <h2>🚀 Revolutionizing Mortgage Processing</h2>
+                            <p>At Kwalifai, we combine cutting-edge artificial intelligence with human expertise to transform the mortgage experience. Our advanced AI specialist Sarah handles sophisticated document analysis and intelligent pre-qualification, while our licensed loan officers ensure every application receives personalized attention.</p>
                             
-                            <h3>Enterprise-Grade Features</h3>
-                            <p>Our platform includes comprehensive admin dashboards, real-time chat monitoring, user management systems, and advanced analytics to ensure the highest quality service and compliance standards.</p>
+                            <h3>🎯 Our Mission</h3>
+                            <p>To make homeownership more accessible by leveraging advanced AI technology to streamline the mortgage process while maintaining the highest standards of service, security, and compliance.</p>
                             
-                            <h3>Licensed & Compliant</h3>
-                            <p>NMLS ID: 1666674. We operate under all applicable federal and state regulations, ensuring your personal information is protected and your loan process meets all legal requirements.</p>
+                            <h3>🏛️ Licensed & Compliant</h3>
+                            <p>NMLS ID: 1666674. We operate under all applicable federal and state regulations, ensuring your personal information is protected with bank-level security and your loan process exceeds all legal requirements.</p>
+
+                            <h3>🤖 Meet Sarah - Your AI Mortgage Specialist</h3>
+                            <p>Sarah is our advanced AI agent, trained on thousands of mortgage scenarios and constantly updated with the latest market conditions. Unlike basic chatbots, Sarah understands context, remembers your conversation, and provides sophisticated mortgage guidance 24/7.</p>
                         </div>
                         
                         <div class="about-stats">
@@ -153,8 +174,12 @@
                                 <div class="stat-label">Customer Satisfaction</div>
                             </div>
                             <div class="stat-card">
-                                <div class="stat-number">24/7</div>
-                                <div class="stat-label">AI Support</div>
+                                <div class="stat-number">50</div>
+                                <div class="stat-label">States Licensed</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number">99.7%</div>
+                                <div class="stat-label">AI Accuracy</div>
                             </div>
                         </div>
                     </div>
@@ -162,96 +187,159 @@
             </div>
         </section>
 
-        <!-- Admin Dashboard -->
+        <!-- Admin Dashboard Page -->
         <section id="admin-page" class="page">
             <div class="container">
-                <div class="admin-header">
-                    <h1 class="page-title">Admin Dashboard</h1>
-                    <div class="admin-status">
-                        <span class="status status--success">System Online</span>
-                        <span class="admin-time" id="admin-time"></span>
+                <div id="admin-login" class="admin-login">
+                    <div class="admin-login-form">
+                        <h2>🔐 Admin Dashboard Access</h2>
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" id="admin-password" class="form-control" placeholder="Enter admin password">
+                        </div>
+                        <button class="btn btn--primary btn--full-width" id="admin-login-btn">Access Dashboard</button>
+                        <div id="admin-error" class="error-message hidden">Invalid password. Please try again.</div>
                     </div>
                 </div>
 
-                <div class="admin-grid">
-                    <div class="admin-panel">
-                        <h2>Live Chat Monitoring</h2>
-                        <div class="chat-monitoring" id="chat-monitoring">
-                            <div class="monitoring-stats">
-                                <div class="stat-item">
-                                    <span class="stat-value" id="active-chats">3</span>
-                                    <span class="stat-label">Active Chats</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-value" id="queue-count">2</span>
-                                    <span class="stat-label">In Queue</span>
-                                </div>
-                                <div class="stat-item">
-                                    <span class="stat-value" id="response-time">1.2s</span>
-                                    <span class="stat-label">Avg Response</span>
+                <div id="admin-dashboard" class="admin-dashboard hidden">
+                    <div class="admin-header">
+                        <h1>🎛️ Kwalifai Admin Dashboard</h1>
+                        <div class="admin-actions">
+                            <button class="btn btn--outline btn--sm" id="refresh-dashboard">🔄 Refresh</button>
+                            <button class="btn btn--secondary btn--sm" id="admin-logout">🚪 Logout</button>
+                        </div>
+                    </div>
+
+                    <div class="admin-tabs">
+                        <button class="admin-tab active" data-tab="monitoring">🔍 Live Chat Monitoring</button>
+                        <button class="admin-tab" data-tab="analytics">📊 Analytics</button>
+                        <button class="admin-tab" data-tab="users">👥 User Management</button>
+                        <button class="admin-tab" data-tab="settings">⚙️ Settings</button>
+                    </div>
+
+                    <!-- Live Chat Monitoring -->
+                    <div id="admin-monitoring" class="admin-tab-content active">
+                        <div class="admin-stats-grid">
+                            <div class="admin-stat-card">
+                                <div class="stat-icon">💬</div>
+                                <div class="stat-info">
+                                    <div class="stat-value" id="active-chats">12</div>
+                                    <div class="stat-label">Active Chats</div>
                                 </div>
                             </div>
-                            <div class="active-sessions" id="active-sessions">
-                                <!-- Populated by JavaScript -->
+                            <div class="admin-stat-card">
+                                <div class="stat-icon">👥</div>
+                                <div class="stat-info">
+                                    <div class="stat-value" id="available-agents">3</div>
+                                    <div class="stat-label">Available Agents</div>
+                                </div>
+                            </div>
+                            <div class="admin-stat-card">
+                                <div class="stat-icon">⏱️</div>
+                                <div class="stat-info">
+                                    <div class="stat-value" id="avg-response">1.2m</div>
+                                    <div class="stat-label">Avg Response Time</div>
+                                </div>
+                            </div>
+                            <div class="admin-stat-card">
+                                <div class="stat-icon">📋</div>
+                                <div class="stat-info">
+                                    <div class="stat-value" id="pending-handoffs">2</div>
+                                    <div class="stat-label">Pending Handoffs</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chat-queue">
+                            <h3>🔴 Live Chat Queue</h3>
+                            <div class="queue-list" id="chat-queue-list">
+                                <!-- Will be populated by JavaScript -->
                             </div>
                         </div>
                     </div>
 
-                    <div class="admin-panel">
-                        <h2>Human Handoff Queue</h2>
-                        <div class="handoff-queue" id="handoff-queue">
-                            <div class="queue-item">
-                                <div class="queue-user">
-                                    <span class="user-name">John D.</span>
-                                    <span class="user-id">#USER_789</span>
-                                </div>
-                                <div class="queue-reason">Complex refinancing question</div>
-                                <div class="queue-wait">Waiting 3m 42s</div>
-                                <button class="btn btn--sm btn--primary">Accept</button>
+                    <!-- Analytics -->
+                    <div id="admin-analytics" class="admin-tab-content">
+                        <div class="analytics-grid">
+                            <div class="chart-container">
+                                <h3>📈 Daily Chat Volume</h3>
+                                <canvas id="chat-volume-chart"></canvas>
                             </div>
-                            <div class="queue-item">
-                                <div class="queue-user">
-                                    <span class="user-name">Maria S.</span>
-                                    <span class="user-id">#USER_456</span>
-                                </div>
-                                <div class="queue-reason">Investment property inquiry</div>
-                                <div class="queue-wait">Waiting 1m 15s</div>
-                                <button class="btn btn--sm btn--primary">Accept</button>
+                            <div class="chart-container">
+                                <h3>🎯 Conversion Rates</h3>
+                                <canvas id="conversion-chart"></canvas>
+                            </div>
+                        </div>
+                        <div class="metrics-table">
+                            <h3>📋 Performance Metrics</h3>
+                            <div class="table-container">
+                                <table class="metrics-table-content">
+                                    <thead>
+                                        <tr>
+                                            <th>Metric</th>
+                                            <th>Today</th>
+                                            <th>Week</th>
+                                            <th>Month</th>
+                                            <th>Trend</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="metrics-table-body">
+                                        <!-- Will be populated by JavaScript -->
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
 
-                    <div class="admin-panel">
-                        <h2>User Management</h2>
+                    <!-- User Management -->
+                    <div id="admin-users" class="admin-tab-content">
                         <div class="user-management">
-                            <div class="user-stats">
-                                <div class="stat-grid">
-                                    <div class="stat-box">
-                                        <span class="stat-number">247</span>
-                                        <span class="stat-desc">Total Users</span>
-                                    </div>
-                                    <div class="stat-box">
-                                        <span class="stat-number">89</span>
-                                        <span class="stat-desc">Active Today</span>
-                                    </div>
-                                    <div class="stat-box">
-                                        <span class="stat-number">156</span>
-                                        <span class="stat-desc">Applications</span>
-                                    </div>
-                                    <div class="stat-box">
-                                        <span class="stat-number">92%</span>
-                                        <span class="stat-desc">Satisfaction</span>
-                                    </div>
-                                </div>
+                            <h3>👥 User Lead Management</h3>
+                            <div class="user-filters">
+                                <input type="text" placeholder="Search users..." class="form-control" id="user-search">
+                                <select class="form-control" id="user-status-filter">
+                                    <option value="all">All Status</option>
+                                    <option value="new">New Leads</option>
+                                    <option value="qualified">Qualified</option>
+                                    <option value="application">In Application</option>
+                                    <option value="approved">Approved</option>
+                                </select>
+                            </div>
+                            <div class="user-list" id="user-list">
+                                <!-- Will be populated by JavaScript -->
                             </div>
                         </div>
                     </div>
 
-                    <div class="admin-panel">
-                        <h2>System Analytics</h2>
-                        <div class="analytics-dashboard">
-                            <div class="chart-container" style="position: relative; height: 300px;">
-                                <canvas id="analytics-chart"></canvas>
+                    <!-- Settings -->
+                    <div id="admin-settings" class="admin-tab-content">
+                        <div class="settings-grid">
+                            <div class="settings-section">
+                                <h3>🤖 Sarah AI Configuration</h3>
+                                <div class="form-group">
+                                    <label class="form-label">Response Style</label>
+                                    <select class="form-control" id="ai-style">
+                                        <option value="professional">Professional</option>
+                                        <option value="friendly">Friendly</option>
+                                        <option value="consultative">Consultative</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Auto-Handoff Threshold</label>
+                                    <select class="form-control" id="handoff-threshold">
+                                        <option value="3">3 Complex Questions</option>
+                                        <option value="5">5 Complex Questions</option>
+                                        <option value="manual">Manual Only</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="settings-section">
+                                <h3>📞 Human Agent Queue</h3>
+                                <div class="agent-queue" id="agent-queue">
+                                    <!-- Will be populated by JavaScript -->
+                                </div>
+                                <button class="btn btn--outline" id="add-agent">➕ Add Agent</button>
                             </div>
                         </div>
                     </div>
@@ -260,77 +348,58 @@
         </section>
     </main>
 
-    <!-- News Article Modal -->
-    <div id="news-modal" class="modal hidden">
-        <div class="modal__backdrop" id="modal-backdrop"></div>
-        <div class="modal__content">
-            <div class="modal__header">
-                <h2 id="modal-headline">Article Title</h2>
-                <button class="modal__close" id="modal-close">×</button>
-            </div>
-            <div class="modal__body">
-                <div class="modal__meta">
-                    <span id="modal-publication">Publication</span> • 
-                    <span id="modal-author">Author</span> • 
-                    <span id="modal-date">Date</span>
-                </div>
-                <div class="modal__content-body">
-                    <p id="modal-summary">Article summary will appear here...</p>
-                    <div class="modal__tags" id="modal-tags"></div>
-                </div>
-            </div>
-            <div class="modal__footer">
-                <a id="modal-external-link" href="#" target="_blank" class="btn btn--primary">Read Full Article</a>
-                <button class="btn btn--outline" id="modal-close-btn">Close</button>
-            </div>
-        </div>
-    </div>
-
     <!-- Advanced Chat Interface -->
     <div id="chat-overlay" class="chat-overlay hidden">
         <div class="chat-container">
             <div class="chat-header">
                 <div class="chat-agent-info">
-                    <div class="chat-avatar chat-avatar--sarah">🧠</div>
+                    <div class="chat-avatar sarah-avatar">🧠</div>
                     <div class="chat-agent-details">
                         <h3>Sarah</h3>
-                        <span class="agent-status" id="agent-status">Sophisticated AI Assistant</span>
+                        <span class="agent-status">🟢 Advanced AI Mortgage Specialist</span>
                     </div>
                 </div>
                 <div class="chat-controls">
-                    <button class="btn-icon" id="handoff-btn" title="Request Human Assistant">👥</button>
+                    <button class="btn btn--sm btn--outline" id="request-human">👤 Human Agent</button>
+                    <button class="chat-minimize" id="minimize-chat">➖</button>
                     <button class="chat-close" id="close-chat">×</button>
                 </div>
             </div>
             
-            <div class="chat-session-info" id="chat-session-info">
-                <span class="session-id">Session: #<span id="session-display"></span></span>
-                <span class="session-status" id="session-status">AI Mode</span>
-            </div>
-
             <div class="chat-messages" id="chat-messages">
                 <div class="message agent-message">
                     <div class="message-avatar">🧠</div>
                     <div class="message-content">
-                        <p>Hi! I'm Sarah, your sophisticated AI mortgage assistant with advanced capabilities. I can handle complex scenarios, multi-session support, and seamless handoffs to our licensed loan officers. How can I help you today?</p>
+                        <p>Hello! I'm Sarah, your advanced AI mortgage specialist at Kwalifai. I have deep expertise in all loan programs and can analyze your financial situation in real-time. How can I help you achieve your homeownership goals today?</p>
                     </div>
+                    <div class="message-time">Just now</div>
                 </div>
             </div>
 
             <div class="typing-indicator hidden" id="typing-indicator">
-                <div class="typing-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <div class="typing-avatar">🧠</div>
+                <div class="typing-content">
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <span class="typing-text">Sarah is analyzing...</span>
                 </div>
-                <span class="typing-text">Sarah is analyzing...</span>
+            </div>
+
+            <div class="chat-suggestions" id="chat-suggestions">
+                <button class="suggestion-btn">💰 Check my qualification</button>
+                <button class="suggestion-btn">📊 Current rates</button>
+                <button class="suggestion-btn">📄 Required documents</button>
+                <button class="suggestion-btn">🏠 Loan programs</button>
             </div>
 
             <div class="chat-input-area">
                 <div class="chat-input-container">
                     <input type="text" 
                            id="chat-input" 
-                           placeholder="Type your message..." 
+                           placeholder="Ask Sarah anything about mortgages..." 
                            autocomplete="off">
                     <input type="file" 
                            id="file-input" 
@@ -341,10 +410,50 @@
                     <button class="btn btn--primary" id="send-btn">Send</button>
                 </div>
                 <div class="upload-status hidden" id="upload-status"></div>
-                <div class="chat-features">
-                    <span class="feature-tag">Multi-Session</span>
-                    <span class="feature-tag">Advanced AI</span>
-                    <span class="feature-tag">Human Handoff</span>
+                <div class="chat-footer-info">
+                    <span>🔐 Bank-level security | NMLS ID: 1666674</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Article Detail Modal -->
+    <div id="article-modal" class="modal hidden">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="modal-article-title"></h2>
+                    <button class="modal-close" id="close-article-modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <div class="article-meta-detail">
+                        <span class="article-author" id="modal-article-author"></span>
+                        <span class="article-publication" id="modal-article-publication"></span>
+                        <span class="article-date" id="modal-article-date"></span>
+                    </div>
+                    <div class="article-content" id="modal-article-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Human Handoff Modal -->
+    <div id="handoff-modal" class="modal hidden">
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title">👤 Connect with Human Agent</h2>
+                    <button class="modal-close" id="close-handoff-modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <p>Would you like to be connected with one of our licensed loan officers for personalized assistance?</p>
+                    <div class="handoff-options">
+                        <button class="btn btn--primary" id="connect-now">🚀 Connect Now</button>
+                        <button class="btn btn--outline" id="schedule-callback">📅 Schedule Callback</button>
+                    </div>
+                    <div class="agent-queue-status">
+                        <span class="status-indicator">🟢 Average wait time: 2 minutes</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -353,6 +462,7 @@
     <!-- Loading Spinner -->
     <div class="loading-spinner hidden" id="loading-spinner">
         <div class="spinner"></div>
+        <div class="loading-text">Sarah is processing...</div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>

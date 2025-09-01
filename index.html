@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kwalifai - AI Powered-Human Backed</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Floating Mortgage Rate Banner -->
+    <div class="rate-banner" id="rateBanner">
+        <div class="rate-banner__content">
+            <div class="rate-banner__rates">
+                <div class="rate-item">
+                    <span class="rate-label">30-Year Fixed</span>
+                    <span class="rate-value">7.125%</span>
+                </div>
+                <div class="rate-item">
+                    <span class="rate-label">15-Year Fixed</span>
+                    <span class="rate-value">6.750%</span>
+                </div>
+                <div class="rate-item">
+                    <span class="rate-label">5/1 ARM</span>
+                    <span class="rate-value">6.375%</span>
+                </div>
+            </div>
+            <div class="rate-banner__cta">
+                <button class="btn btn--sm btn--primary" id="getRateBtn">Get Your Rate</button>
+                <button class="rate-banner__close" id="closeBanner">&times;</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header Navigation -->
+    <header class="header">
+        <div class="container">
+            <div class="header__content">
+                <div class="logo" id="homeLink">
+                    <h1 class="logo__text">Kwalifai</h1>
+                    <span class="logo__tagline">AI Powered-Human Backed</span>
+                </div>
+                <nav class="nav">
+                    <a href="#" class="nav__link" data-page="home">Home</a>
+                    <a href="#" class="nav__link" data-page="news">News</a>
+                    <a href="#" class="nav__link" data-page="about">About</a>
+                    <button class="btn btn--primary btn--sm" id="chatWithKira">Chat with Kira</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Container -->
+    <main id="pageContainer">
+        <!-- HOME PAGE -->
+        <div class="page" id="homePage">
+            <!-- Hero Section -->
+            <section class="hero hero--home">
+                <div class="container">
+                    <div class="hero__content">
+                        <h1 class="hero__title">Qualify Fast. AI Powered.</h1>
+                        <p class="hero__subtitle">Get qualified for a mortgage in minutes with Kira, our AI assistant, then connect with licensed loan officers for personalized rate quotes.</p>
+                        <div class="hero__actions">
+                            <button class="btn btn--primary btn--lg" id="startQualification">Start Qualification</button>
+                            <button class="btn btn--outline btn--lg" id="learnMore">Learn More</button>
+                        </div>
+                        <div class="hero__trust">
+                            <span class="trust-item">NMLS ID: 1666674</span>
+                            <span class="trust-item">Equal Housing Lender</span>
+                            <span class="trust-item">Licensed in 50 States</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- How It Works Section -->
+            <section class="how-it-works">
+                <div class="container">
+                    <h2 class="section__title">How It Works</h2>
+                    <div class="steps-grid">
+                        <div class="step">
+                            <div class="step__icon">1</div>
+                            <h3 class="step__title">Chat with Kira</h3>
+                            <p class="step__description">Our AI assistant gathers your information and helps determine your qualification status in minutes.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step__icon">2</div>
+                            <h3 class="step__title">Get Pre-Qualified</h3>
+                            <p class="step__description">Receive instant pre-qualification results and understand your mortgage options.</p>
+                        </div>
+                        <div class="step">
+                            <div class="step__icon">3</div>
+                            <h3 class="step__title">Connect with Experts</h3>
+                            <p class="step__description">Our licensed loan officers provide personalized rate quotes and guide you through the process.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Features Section -->
+            <section class="features">
+                <div class="container">
+                    <div class="features__grid">
+                        <div class="feature-card">
+                            <h3 class="feature-card__title">AI-Powered Qualification</h3>
+                            <p class="feature-card__description">Advanced algorithms analyze your financial profile for instant qualification results.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-card__title">Document Upload</h3>
+                            <p class="feature-card__description">Securely upload documents through our encrypted platform for faster processing.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-card__title">Licensed Professionals</h3>
+                            <p class="feature-card__description">All rate quotes and loan decisions are handled by licensed mortgage professionals.</p>
+                        </div>
+                        <div class="feature-card">
+                            <h3 class="feature-card__title">Bank-Level Security</h3>
+                            <p class="feature-card__description">Your personal information is protected with enterprise-grade encryption.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- NEWS PAGE -->
+        <div class="page hidden" id="newsPage">
+            <!-- Search Modal -->
+            <div class="modal hidden" id="searchModal">
+                <div class="modal__overlay" id="searchOverlay"></div>
+                <div class="modal__content modal__content--search">
+                    <div class="modal__header">
+                        <h3 class="modal__title">Search News</h3>
+                        <button class="modal__close" id="closeSearch">&times;</button>
+                    </div>
+                    <div class="search__container">
+                        <input type="text" class="form-control" id="searchInput" placeholder="Search articles, topics, or publications...">
+                        <div class="search__filters">
+                            <select class="form-control" id="categoryFilter">
+                                <option value="">All Categories</option>
+                                <option value="market-updates">Market Updates & Rates</option>
+                                <option value="regulatory">Regulatory Changes</option>
+                                <option value="technology">Technology & Innovation</option>
+                                <option value="industry-analysis">Industry Analysis</option>
+                            </select>
+                            <select class="form-control" id="publicationFilter">
+                                <option value="">All Publications</option>
+                                <option value="housingwire">HousingWire</option>
+                                <option value="national-mortgage-news">National Mortgage News</option>
+                                <option value="mortgage-banking">Mortgage Banking Magazine</option>
+                                <option value="american-banker">American Banker</option>
+                            </select>
+                        </div>
+                        <button class="btn btn--primary" id="performSearch">Search</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News Hero Section -->
+            <section class="hero hero--news">
+                <div class="container">
+                    <div class="hero__content">
+                        <h1 class="hero__title">Mortgage Industry News</h1>
+                        <p class="hero__subtitle">AI-powered news aggregation from leading mortgage publications</p>
+                        <div class="hero__actions">
+                            <button class="btn btn--primary" id="searchBtn">Search Articles</button>
+                        </div>
+                        <div class="hero__stats">
+                            <div class="stat">
+                                <span class="stat__number">50+</span>
+                                <span class="stat__label">Daily Articles</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat__number">8</span>
+                                <span class="stat__label">Publications</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat__number">24/7</span>
+                                <span class="stat__label">Updates</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Article -->
+            <section class="featured-article">
+                <div class="container">
+                    <div class="featured-card">
+                        <div class="featured-card__header">
+                            <span class="featured-badge">Featured Article</span>
+                            <div class="article-meta">
+                                <span class="article-meta__source">HousingWire</span>
+                                <span class="article-meta__date">September 01, 2025</span>
+                            </div>
+                        </div>
+                        <h2 class="featured-card__title">Mortgage Rates Hit 7.2% Amid Fed Policy Uncertainty</h2>
+                        <p class="featured-card__summary">The 30-year fixed mortgage rate climbed to 7.2%, the highest level since November 2023, as investors price in potential Federal Reserve policy changes. Mortgage applications fell 15% week-over-week as affordability concerns mount.</p>
+                        <div class="featured-card__tags">
+                            <span class="tag tag--negative">Market Updates</span>
+                            <span class="tag tag--neutral">Fed Policy</span>
+                            <span class="tag tag--neutral">Housing Market</span>
+                        </div>
+                        <a href="https://housingwire.com/articles/mortgage-rates-hit-7-2-percent/" target="_blank" class="btn btn--primary">Read Full Article</a>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Categories Section -->
+            <section class="categories">
+                <div class="container">
+                    <h2 class="section__title">Browse by Category</h2>
+                    <div class="category-grid">
+                        <div class="category-card" data-category="market-updates">
+                            <h3 class="category-card__title">Market Updates & Rates</h3>
+                            <p class="category-card__description">Latest mortgage rate trends and market analysis</p>
+                            <span class="category-card__count">12 articles today</span>
+                        </div>
+                        <div class="category-card" data-category="regulatory">
+                            <h3 class="category-card__title">Regulatory Changes</h3>
+                            <p class="category-card__description">New regulations and compliance updates</p>
+                            <span class="category-card__count">5 articles today</span>
+                        </div>
+                        <div class="category-card" data-category="technology">
+                            <h3 class="category-card__title">Technology & Innovation</h3>
+                            <p class="category-card__description">Fintech, AI, and digital transformation</p>
+                            <span class="category-card__count">8 articles today</span>
+                        </div>
+                        <div class="category-card" data-category="industry-analysis">
+                            <h3 class="category-card__title">Industry Analysis</h3>
+                            <p class="category-card__description">Market insights and industry trends</p>
+                            <span class="category-card__count">6 articles today</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Latest News Feed -->
+            <section class="news-feed">
+                <div class="container">
+                    <div class="news-feed__header">
+                        <h2 class="section__title">Latest News</h2>
+                        <div class="news-feed__filters">
+                            <button class="filter-btn active" data-filter="all">All</button>
+                            <button class="filter-btn" data-filter="market-updates">Market</button>
+                            <button class="filter-btn" data-filter="technology">Tech</button>
+                            <button class="filter-btn" data-filter="regulatory">Regulatory</button>
+                            <button class="filter-btn" data-filter="industry-analysis">Analysis</button>
+                        </div>
+                    </div>
+                    
+                    <div class="news-grid" id="newsGrid">
+                        <!-- News articles will be populated by JavaScript -->
+                    </div>
+                    
+                    <div class="news-feed__pagination">
+                        <button class="btn btn--outline" id="loadMore">Load More Articles</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Trending Sidebar -->
+            <aside class="sidebar">
+                <div class="sidebar__content">
+                    <div class="sidebar__section">
+                        <h3 class="sidebar__title">Trending Topics</h3>
+                        <div class="trending-topics">
+                            <span class="topic-tag" data-topic="mortgage rates">Mortgage Rates</span>
+                            <span class="topic-tag" data-topic="fed policy">Fed Policy</span>
+                            <span class="topic-tag" data-topic="ai lending">AI Lending</span>
+                            <span class="topic-tag" data-topic="housing market">Housing Market</span>
+                            <span class="topic-tag" data-topic="cfpb rules">CFPB Rules</span>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar__section">
+                        <h3 class="sidebar__title">Quick Stats</h3>
+                        <div class="quick-stats">
+                            <div class="quick-stat">
+                                <span class="quick-stat__label">Articles Today</span>
+                                <span class="quick-stat__value">42</span>
+                            </div>
+                            <div class="quick-stat">
+                                <span class="quick-stat__label">Positive Sentiment</span>
+                                <span class="quick-stat__value">32%</span>
+                            </div>
+                            <div class="quick-stat">
+                                <span class="quick-stat__label">Rate Mentions</span>
+                                <span class="quick-stat__value">18</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- ABOUT PAGE -->
+        <div class="page hidden" id="aboutPage">
+            <section class="hero hero--about">
+                <div class="container">
+                    <div class="hero__content">
+                        <h1 class="hero__title">About Kwalifai</h1>
+                        <p class="hero__subtitle">Revolutionizing mortgage qualification with AI technology and human expertise</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="about-content">
+                <div class="container">
+                    <div class="about-grid">
+                        <div class="about-text">
+                            <h2>Our Mission</h2>
+                            <p>At Kwalifai, we combine cutting-edge AI technology with experienced mortgage professionals to make homeownership more accessible. Our platform streamlines the qualification process while ensuring every borrower receives personalized guidance from licensed loan officers.</p>
+                            
+                            <h3>Compliance & Licensing</h3>
+                            <div class="compliance-info">
+                                <p><strong>NMLS ID:</strong> 1666674</p>
+                                <p><strong>Licensing:</strong> Licensed in all 50 states</p>
+                                <p><strong>Equal Housing:</strong> Equal Housing Lender</p>
+                                <p><strong>Rate Disclaimer:</strong> Sample rates shown for informational purposes only. Licensed loan officers provide personalized rate quotes.</p>
+                            </div>
+                        </div>
+                        <div class="about-stats">
+                            <div class="stat-card">
+                                <h3>10,000+</h3>
+                                <p>Qualified Borrowers</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>27 Days</h3>
+                                <p>Average Processing Time</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3>4.9/5</h3>
+                                <p>Customer Satisfaction</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Kira Chat Modal -->
+    <div class="modal hidden" id="kiraModal">
+        <div class="modal__overlay" id="kiraOverlay"></div>
+        <div class="modal__content modal__content--chat">
+            <div class="modal__header">
+                <h3 class="modal__title">Chat with Kira - AI Mortgage Assistant</h3>
+                <button class="modal__close" id="closeKira">&times;</button>
+            </div>
+            <div class="chat__container">
+                <div class="chat__messages" id="chatMessages">
+                    <div class="chat__message chat__message--kira">
+                        <div class="chat__avatar">K</div>
+                        <div class="chat__content">
+                            <p>Hi! I'm Kira from Kwalifai. I help you get qualified for a mortgage quickly using AI technology, then connect you with licensed loan officers who can provide personalized rate quotes. Are you looking to purchase or refinance?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat__input-container">
+                    <input type="text" class="form-control" id="chatInput" placeholder="Type your message...">
+                    <button class="btn btn--primary" id="sendMessage">Send</button>
+                </div>
+                <div class="chat__actions">
+                    <button class="btn btn--outline btn--sm" id="uploadDocs">Upload Documents</button>
+                    <button class="btn btn--outline btn--sm" id="scheduleCall">Schedule Call</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer__content">
+                <div class="footer__brand">
+                    <h3 class="footer__title">Kwalifai</h3>
+                    <p class="footer__tagline">AI Powered-Human Backed</p>
+                </div>
+                <div class="footer__links">
+                    <div class="footer__column">
+                        <h4>Services</h4>
+                        <a href="#" data-page="home">Mortgage Qualification</a>
+                        <a href="#" data-page="news">Industry News</a>
+                        <a href="#" data-page="about">About Us</a>
+                    </div>
+                    <div class="footer__column">
+                        <h4>Legal</h4>
+                        <a href="#" target="_blank">Privacy Policy</a>
+                        <a href="#" target="_blank">Terms of Service</a>
+                        <a href="#" target="_blank">Licensing</a>
+                    </div>
+                    <div class="footer__column">
+                        <h4>Contact</h4>
+                        <p>1-800-KWALIFAI</p>
+                        <p>support@kwalifai.com</p>
+                    </div>
+                </div>
+                <div class="footer__disclaimer">
+                    <p class="disclaimer">NMLS ID: 1666674. Equal Housing Lender. Sample rates shown for informational purposes only. Actual rates vary based on credit score, down payment, loan amount, and other factors. Rates subject to change without notice. We protect your personal information with bank-level security. Your information is used solely for mortgage qualification and rate quotes.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

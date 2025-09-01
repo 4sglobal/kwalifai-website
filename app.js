@@ -1,840 +1,892 @@
-// Kwalifai Complete Website Application with Real AI Integration
-class KwalifaiApp {
-    constructor() {
-        this.currentPage = 'home';
-        this.chatState = {
-            isOpen: false,
-            currentAgent: 'ai',
-            conversationHistory: [],
-            userInfo: {},
-            pendingHumanHandoff: false,
-            messageCount: 0,
-            uploadedFiles: [],
-            documentsProcessed: 0
-        };
-        
-        // AI Integration Settings
-        this.sessionId = null;
-        this.isAiTyping = false;
-        this.backendUrl = 'http://localhost:5000'; // Change this for production deployment
-        this.maxRetries = 3;
-        this.retryCount = 0;
-        
-        // Rate banner configuration
-        this.rateBannerConfig = {
-            displayDelay: 2500,
-            isDismissible: true,
-            autoRefresh: 300000
-        };
-        
-        // News data
-        this.newsArticles = [
-            {
-                id: '1',
-                headline: 'Mortgage Rates Hit 7.2% Amid Fed Policy Uncertainty',
-                publication: 'HousingWire',
-                author: 'Sarah Johnson',
-                publishDate: '2025-09-01',
-                category: 'market-updates',
-                aiSummary: 'The 30-year fixed mortgage rate climbed to 7.2%, the highest level since November 2023, as investors price in potential Federal Reserve policy changes. Mortgage applications fell 15% week-over-week as affordability concerns mount.',
-                sentiment: 'negative',
-                tags: ['mortgage rates', 'fed policy', 'housing market'],
-                originalUrl: 'https://housingwire.com/articles/mortgage-rates-hit-7-2-percent/',
-                featured: true
-            },
-            {
-                id: '2',
-                headline: 'AI-Powered Underwriting Shows 40% Faster Approval Times',
-                publication: 'National Mortgage News',
-                author: 'Michael Chen',
-                publishDate: '2025-08-31',
-                category: 'technology',
-                aiSummary: 'Major lenders implementing AI-driven underwriting systems report significant efficiency gains, with loan processing times reduced from 45 to 27 days on average. Consumer satisfaction scores also improved by 25%.',
-                sentiment: 'positive',
-                tags: ['AI', 'underwriting', 'loan processing'],
-                originalUrl: 'https://nationalmortgagenews.com/ai-underwriting-efficiency/'
-            },
-            {
-                id: '3',
-                headline: 'New CFPB Guidelines Target Digital Mortgage Platforms',
-                publication: 'American Banker',
-                author: 'Jessica Rodriguez',
-                publishDate: '2025-08-30',
-                category: 'regulatory',
-                aiSummary: 'The Consumer Financial Protection Bureau released new guidance for digital mortgage platforms, emphasizing fair lending practices and data privacy requirements. Compliance deadlines set for early 2026.',
-                sentiment: 'neutral',
-                tags: ['CFPB', 'regulation', 'digital lending'],
-                originalUrl: 'https://americanbanker.com/cfpb-digital-mortgage-guidelines/'
-            },
-            {
-                id: '4',
-                headline: 'First-Time Homebuyer Programs See Record Demand',
-                publication: 'Mortgage Banking Magazine',
-                author: 'David Kim',
-                publishDate: '2025-08-29',
-                category: 'consumer-trends',
-                aiSummary: 'Government-backed first-time homebuyer assistance programs experienced 45% increase in applications compared to last year, driven by innovative down payment assistance and educational initiatives.',
-                sentiment: 'positive',
-                tags: ['first-time buyers', 'government programs', 'down payment assistance'],
-                originalUrl: 'https://mortgagebanking.com/first-time-buyer-demand/'
-            },
-            {
-                id: '5',
-                headline: 'Jumbo Loan Limits Increase 5% for 2026',
-                publication: 'HousingWire',
-                author: 'Amanda Torres',
-                publishDate: '2025-08-28',
-                category: 'regulatory',
-                aiSummary: 'Federal Housing Finance Agency announces conforming loan limits will rise to $827,300 for most areas in 2026, reflecting continued home price appreciation. High-cost areas may see limits up to $1.24 million.',
-                sentiment: 'neutral',
-                tags: ['loan limits', 'FHFA', 'jumbo loans'],
-                originalUrl: 'https://housingwire.com/jumbo-loan-limits-2026/'
-            },
-            {
-                id: '6',
-                headline: 'Blockchain Technology Enters Mortgage Settlement Process',
-                publication: 'National Mortgage News',
-                author: 'Robert Chang',
-                publishDate: '2025-08-27',
-                category: 'technology',
-                aiSummary: 'Three major title companies pilot blockchain-based settlement platform, promising to reduce closing times from 45 to 15 days while improving transparency and reducing errors in document management.',
-                sentiment: 'positive',
-                tags: ['blockchain', 'settlement', 'title companies'],
-                originalUrl: 'https://nationalmortgagenews.com/blockchain-settlements/'
-            }
-        ];
-        
-        this.filteredArticles = [...this.newsArticles];
-        this.currentNewsFilter = 'all';
-        this.newsSearchQuery = '';
-        
-        this.init();
+// Application State
+let currentPage = 'home';
+let currentFilter = 'all';
+let articlesDisplayed = 6;
+let searchResults = [];
+let allArticles = [];
+let isSearchMode = false;
+let chatMessages = [];
+// Sample article data based on provided data
+const sampleArticles = [
+    {
+        id: "1",
+        headline: "Mortgage Rates Hit 7.2% Amid Fed Policy Uncertainty",
+        publication: "HousingWire",
+        author: "Sarah Johnson",
+        publishDate: "2025-09-01",
+        category: "market-updates",
+        aiSummary: "The 30-year fixed mortgage rate climbed to 7.2%, the highest level since November 2023, as investors price in potential Federal Reserve policy changes. Mortgage applications fell 15% week-over-week as affordability concerns mount.",
+        sentiment: "negative",
+        tags: ["mortgage rates", "fed policy", "housing market"],
+        originalUrl: "https://housingwire.com/articles/mortgage-rates-hit-7-2-percent/"
+    },
+    {
+        id: "2", 
+        headline: "AI-Powered Underwriting Shows 40% Faster Approval Times",
+        publication: "National Mortgage News",
+        author: "Michael Chen",
+        publishDate: "2025-08-31",
+        category: "technology",
+        aiSummary: "Major lenders implementing AI-driven underwriting systems report significant efficiency gains, with loan processing times reduced from 45 to 27 days on average. Consumer satisfaction scores also improved by 25%.",
+        sentiment: "positive", 
+        tags: ["AI", "underwriting", "loan processing"],
+        originalUrl: "https://nationalmortgagenews.com/ai-underwriting-efficiency/"
+    },
+    {
+        id: "3",
+        headline: "New CFPB Guidelines Target Digital Mortgage Platforms",
+        publication: "American Banker",
+        author: "Jessica Rodriguez",
+        publishDate: "2025-08-30",
+        category: "regulatory",
+        aiSummary: "The Consumer Financial Protection Bureau released new guidance for digital mortgage platforms, emphasizing fair lending practices and data privacy requirements. Compliance deadlines set for early 2026.",
+        sentiment: "neutral",
+        tags: ["CFPB", "regulation", "digital lending"],
+        originalUrl: "https://americanbanker.com/cfpb-digital-mortgage-guidelines/"
+    },
+    {
+        id: "4",
+        headline: "Housing Inventory Shortage Drives Competition Among Lenders",
+        publication: "Mortgage Banking Magazine","I'd be happy to help you with rate information! Our licensed loan officers provide personalized rate quotes..."
+        author: "David Park",
+        publishDate: "2025-08-29",
+        category: "industry-analysis",
+        aiSummary: "With housing inventory at historic lows, mortgage lenders are intensifying competition for qualified borrowers through enhanced digital experiences and streamlined approval processes.",
+        sentiment: "neutral",
+        tags: ["housing inventory", "competition", "lenders"],
+        originalUrl: "https://mortgagebanking.com/housing-inventory-competition/"
+    },
+    {
+        id: "5",
+        headline: "FHA Announces Updates to Loan Limits for 2026",
+        publication: "HousingWire",
+        author: "Maria Gonzalez",
+        publishDate: "2025-08-28",
+        category: "regulatory",
+        aiSummary: "The Federal Housing Administration released preliminary 2026 loan limit adjustments, with increases expected in high-cost areas to reflect continued home price appreciation.",
+        sentiment: "neutral",
+        tags: ["FHA", "loan limits", "2026"],
+        originalUrl: "https://housingwire.com/fha-loan-limits-2026/"
+    },
+    {
+        id: "6",
+        headline: "First-Time Homebuyers Face Unprecedented Affordability Crisis",
+        publication: "National Mortgage News",
+        author: "Lisa Chang",
+        publishDate: "2025-08-27",
+        category: "market-updates",
+        aiSummary: "Rising mortgage rates combined with high home prices have pushed homeownership out of reach for many first-time buyers, with affordability indexes hitting 40-year lows in major metropolitan areas.",
+        sentiment: "negative",
+        tags: ["first-time buyers", "affordability", "housing crisis"],
+        originalUrl: "https://nationalmortgagenews.com/first-time-buyer-affordability/"
     }
-    
-    init() {
-        this.initializeNavigation();
-        this.initializeRateBanner();
-        this.initializeChat();
-        this.initializeNews();
-        this.initializeEventListeners();
-        
-        // Show rate banner after delay
-        setTimeout(() => {
-            this.showRateBanner();
-        }, this.rateBannerConfig.displayDelay);
-        
-        console.log('🚀 Kwalifai website initialized with AI integration');
+];
+
+// Kira's conversation flow
+const kiraFlows = {
+    greeting: {
+        message: "Hi! I'm Kira from Kwalifai. I help you get qualified for a mortgage quickly using AI technology, then connect you with licensed loan officers who can provide personalized rate quotes. Are you looking to purchase or refinance?",
+        options: ["Purchase", "Refinance", "I'm just exploring"]
+    },
+    purchase: {
+        message: "Great! I'll help you get pre-qualified for a purchase. What's your approximate annual household income?",
+        options: ["Under $50k", "$50k-$75k", "$75k-$100k", "$100k-$150k", "Over $150k"]
+    },
+    refinance: {
+        message: "Perfect! For refinancing, what's your current mortgage balance approximately?",
+        options: ["Under $200k", "$200k-$400k", "$400k-$600k", "Over $600k"]
+    },
+    exploring: {
+        message: "No problem! I can help you understand the mortgage process. Would you like to learn about qualification requirements or current market rates?",
+        options: ["Qualification Requirements", "Current Rates", "How Kwalifai Works"]
+    },
+    income_next: {
+        message: "Thanks! What's your estimated credit score?",
+        options: ["Excellent (750+)", "Good (700-749)", "Fair (650-699)", "Needs improvement (<650)", "I don't know"]
+    },
+    qualification_complete: {
+        message: "Based on your information, you appear to be a strong candidate for mortgage qualification! Our licensed loan officers can provide personalized rate quotes and guide you through the next steps. Would you like me to connect you with one of our professionals?",
+        options: ["Yes, connect me", "Send me information", "I'll think about it"]
+    },
+    handoff: {
+        message: "Perfect! I'm connecting you with one of our licensed loan officers who will contact you within the next business day with personalized rate quotes and next steps. Remember, NMLS ID: 1666674. Is there anything else I can help you with today?",
+        options: ["Upload documents", "Schedule a call", "That's all, thanks!"]
     }
+};
+
+// Initialize application
+document.addEventListener('DOMContentLoaded', function() {
+    allArticles = [...sampleArticles];
+    initializeApp();
+});
+
+function initializeApp() {
+    console.log('Initializing Kwalifai Application...');
+    setupEventListeners();
+    updateRateBanner();
+    navigateToPage('home');
+    console.log('Kwalifai Application Ready - NMLS ID: 1666674');
+}
+
+// Event Listeners
+function setupEventListeners() {
+    console.log('Setting up event listeners...');
     
-    initializeNavigation() {
-        this.updateActiveNavLink();
-    }
+    // Navigation
+    setupNavigation();
     
-    initializeRateBanner() {
-        const closeBanner = document.getElementById('closeBanner');
-        if (closeBanner) {
-            closeBanner.addEventListener('click', () => {
-                this.hideRateBanner();
-            });
-        }
-        
-        const rateQuoteBtn = document.getElementById('rateQuoteBtn');
-        if (rateQuoteBtn) {
-            rateQuoteBtn.addEventListener('click', () => {
-                this.openChat('rate_quote');
-            });
-        }
-        
-        const rateChatBtn = document.getElementById('rateChatBtn');
-        if (rateChatBtn) {
-            rateChatBtn.addEventListener('click', () => {
-                this.openChat();
-            });
-        }
-    }
+    // Rate banner
+    setupRateBanner();
     
-    initializeChat() {
-        const chatModal = document.getElementById('chat-modal');
-        const chatBackdrop = document.getElementById('chat-backdrop');
-        const chatClose = document.getElementById('chat-close');
-        const chatSend = document.getElementById('chat-send');
-        const chatInput = document.getElementById('chat-input');
-        const fileUploadBtn = document.getElementById('file-upload-btn');
-        const fileInput = document.getElementById('file-input');
-        
-        // Chat modal triggers
-        const chatButtons = [
-            document.getElementById('header-chat-btn'),
-            document.getElementById('get-qualified-btn'),
-            document.getElementById('about-chat-btn')
-        ];
-        
-        chatButtons.forEach(btn => {
-            if (btn) {
-                btn.addEventListener('click', () => {
-                    this.openChat();
-                });
-            }
+    // Home page interactions
+    setupHomePageEvents();
+    
+    // News page interactions
+    setupNewsPageEvents();
+    
+    // Chat functionality
+    setupChatEvents();
+    
+    // Global events
+    setupGlobalEvents();
+    
+    console.log('Event listeners setup complete');
+}
+
+function setupNavigation() {
+    console.log('Setting up navigation...');
+    
+    // Logo click
+    const homeLink = document.getElementById('homeLink');
+    if (homeLink) {
+        homeLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Logo clicked - navigating to home');
+            navigateToPage('home');
         });
-        
-        // Close chat handlers
-        if (chatClose) {
-            chatClose.addEventListener('click', () => {
-                this.closeChat();
-            });
-        }
-        
-        if (chatBackdrop) {
-            chatBackdrop.addEventListener('click', () => {
-                this.closeChat();
-            });
-        }
-        
-        // Send message handlers
-        if (chatSend) {
-            chatSend.addEventListener('click', () => {
-                this.sendChatMessage();
-            });
-        }
-        
-        if (chatInput) {
-            chatInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    this.sendChatMessage();
-                }
-            });
-        }
-        
-        // File upload handlers
-        if (fileUploadBtn) {
-            fileUploadBtn.addEventListener('click', () => {
-                if (fileInput) {
-                    fileInput.click();
-                }
-            });
-        }
-        
-        if (fileInput) {
-            fileInput.addEventListener('change', (e) => {
-                this.handleFileUpload(e.target.files);
-            });
-        }
+        console.log('Logo navigation setup');
     }
     
-    initializeNews() {
-        if (this.currentPage === 'news') {
-            this.renderNews();
+    // Navigation links
+    const navLinks = document.querySelectorAll('.nav__link');
+    console.log('Found navigation links:', navLinks.length);
+    
+    navLinks.forEach(function(link, index) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const page = this.getAttribute('data-page');
+            console.log('Navigation link clicked:', page);
+            navigateToPage(page);
+        });
+        console.log('Setup nav link', index, link.getAttribute('data-page'));
+    });
+    
+    // Footer navigation links
+    const footerLinks = document.querySelectorAll('.footer__column a[data-page]');
+    footerLinks.forEach(function(link) {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const page = this.getAttribute('data-page');
+            console.log('Footer link clicked:', page);
+            navigateToPage(page);
+        });
+    });
+}
+
+function setupRateBanner() {
+    const closeBanner = document.getElementById('closeBanner');
+    const getRateBtn = document.getElementById('getRateBtn');
+    
+    if (closeBanner) {
+        closeBanner.addEventListener('click', function(e) {
+            e.preventDefault();
+            hideRateBanner();
+        });
+    }
+    
+    if (getRateBtn) {
+        getRateBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Get Rate button clicked');
+            openKiraChat();
+        });
+    }
+    
+    // Auto-hide banner after 15 seconds
+    setTimeout(function() {
+        const rateBanner = document.getElementById('rateBanner');
+        if (rateBanner && !rateBanner.classList.contains('hidden')) {
+            hideRateBanner();
         }
-        
-        // News search
-        const newsSearch = document.getElementById('news-search');
-        if (newsSearch) {
-            newsSearch.addEventListener('input', (e) => {
-                this.newsSearchQuery = e.target.value.toLowerCase();
-                this.applyNewsFilters();
-            });
-        }
-        
-        // News filter tabs
-        const filterTabs = document.querySelectorAll('.filter-tab');
-        filterTabs.forEach(tab => {
-            tab.addEventListener('click', (e) => {
+    }, 15000);
+}
+
+function setupHomePageEvents() {
+    console.log('Setting up home page events...');
+    
+    // Hero buttons
+    const startQualificationBtn = document.getElementById('startQualification');
+    const learnMoreBtn = document.getElementById('learnMore');
+    const chatWithKiraBtn = document.getElementById('chatWithKira');
+    
+    if (startQualificationBtn) {
+        startQualificationBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Start Qualification clicked');
+            openKiraChat();
+        });
+        console.log('Start Qualification button setup');
+    }
+    
+    if (learnMoreBtn) {
+        learnMoreBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Learn More clicked');
+            navigateToPage('about');
+        });
+        console.log('Learn More button setup');
+    }
+    
+    if (chatWithKiraBtn) {
+        chatWithKiraBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            console.log('Chat with Kira clicked');
+            openKiraChat();
+        });
+        console.log('Chat with Kira button setup');
+    }
+}
+
+function setupNewsPageEvents() {
+    console.log('Setting up news page events...');
+    
+    // Search functionality
+    const searchBtn = document.getElementById('searchBtn');
+    const closeSearch = document.getElementById('closeSearch');
+    const searchOverlay = document.getElementById('searchOverlay');
+    const performSearch = document.getElementById('performSearch');
+    const searchInput = document.getElementById('searchInput');
+    
+    if (searchBtn) {
+        searchBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openSearchModal();
+        });
+    }
+    
+    if (closeSearch) {
+        closeSearch.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeSearchModal();
+        });
+    }
+    
+    if (searchOverlay) {
+        searchOverlay.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeSearchModal();
+        });
+    }
+    
+    if (performSearch) {
+        performSearch.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleSearch();
+        });
+    }
+    
+    if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
                 e.preventDefault();
-                
-                // Remove active class from all tabs
-                filterTabs.forEach(t => t.classList.remove('active'));
-                
-                // Add active class to clicked tab
-                tab.classList.add('active');
-                
-                // Update current filter
-                this.currentNewsFilter = tab.dataset.category || 'all';
-                this.applyNewsFilters();
-            });
-        });
-        
-        // Load more news button
-        const loadMoreBtn = document.getElementById('load-more-news');
-        if (loadMoreBtn) {
-            loadMoreBtn.addEventListener('click', () => {
-                this.loadMoreNews();
-            });
-        }
-    }
-    
-    initializeEventListeners() {
-        // Learn more button
-        const learnMoreBtn = document.getElementById('learn-more-btn');
-        if (learnMoreBtn) {
-            learnMoreBtn.addEventListener('click', () => {
-                this.scrollToSection('process');
-            });
-        }
-    }
-    
-    // Navigation methods
-    navigateToPage(page) {
-        // Hide all pages
-        const pages = document.querySelectorAll('.page');
-        pages.forEach(p => p.classList.remove('active'));
-        
-        // Show target page
-        let targetPage;
-        switch(page) {
-            case '/':
-                targetPage = 'home';
-                break;
-            case '/news':
-                targetPage = 'news';
-                break;
-            case '/about':
-                targetPage = 'about';
-                break;
-            default:
-                targetPage = 'home';
-        }
-        
-        const pageElement = document.getElementById(`page-${targetPage}`);
-        if (pageElement) {
-            pageElement.classList.add('active');
-            this.currentPage = targetPage;
-            
-            // Initialize page-specific functionality
-            if (targetPage === 'news') {
-                this.renderNews();
-            }
-            
-            // Update active nav link
-            this.updateActiveNavLink();
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    }
-    
-    updateActiveNavLink() {
-        const navLinks = document.querySelectorAll('.nav__link');
-        navLinks.forEach(link => {
-            link.classList.remove('active');
-            const page = link.dataset.page;
-            if (
-                (page === 'home' && this.currentPage === 'home') ||
-                (page === 'news' && this.currentPage === 'news') ||
-                (page === 'about' && this.currentPage === 'about')
-            ) {
-                link.classList.add('active');
+                handleSearch();
             }
         });
     }
     
-    // Rate banner methods
-    showRateBanner() {
-        const rateBanner = document.getElementById('rateBanner');
-        if (rateBanner) {
-            rateBanner.classList.remove('hidden');
-            rateBanner.classList.add('show');
-            document.body.classList.add('rate-banner-visible');
-        }
-    }
-    
-    hideRateBanner() {
-        const rateBanner = document.getElementById('rateBanner');
-        if (rateBanner) {
-            rateBanner.classList.remove('show');
-            rateBanner.classList.add('hidden');
-            document.body.classList.remove('rate-banner-visible');
-        }
-    }
-    
-    // ENHANCED AI CHAT METHODS
-    openChat(context = 'general') {
-        const chatModal = document.getElementById('chat-modal');
-        if (chatModal) {
-            chatModal.classList.add('show');
-            document.body.style.overflow = 'hidden';
-            
-            // Initialize chat with context-specific greeting
-            this.initializeChatContext(context);
-            
-            // Focus input
-            const chatInput = document.getElementById('chat-input');
-            if (chatInput) {
-                setTimeout(() => {
-                    chatInput.focus();
-                }, 300);
-            }
-        }
-    }
-    
-    closeChat() {
-        const chatModal = document.getElementById('chat-modal');
-        if (chatModal) {
-            chatModal.classList.remove('show');
-            document.body.style.overflow = '';
-        }
-    }
-    
-    initializeChatContext(context) {
-        const chatMessages = document.getElementById('chat-messages');
-        if (!chatMessages) return;
-        
-        // Clear previous messages
-        chatMessages.innerHTML = '';
-        
-        // Reset session for new conversation
-        this.sessionId = null;
-        this.retryCount = 0;
-        
-        let greeting;
-        switch (context) {
-            case 'rate_quote':
-                greeting = "Hi! I'm Kira from Kwalifai. I see you're interested in our current rates. I'll help you get qualified quickly using AI technology, then connect you with licensed loan officers who can provide personalized rate quotes. What type of loan are you considering?";
-                break;
-            case 'qualification':
-                greeting = "Hi! I'm Kira from Kwalifai. Let's get you qualified fast! I'll use AI to analyze your information quickly, then connect you with licensed loan officers for personalized rates. Are you looking to purchase or refinance?";
-                break;
-            default:
-                greeting = "Hi! I'm Kira from Kwalifai. I help you get qualified for a mortgage quickly using AI technology, then connect you with licensed loan officers who can provide personalized rate quotes. Are you looking to purchase or refinance?";
-        }
-        
-        this.addChatMessage('ai', greeting);
-    }
-    
-    sendChatMessage() {
-        const chatInput = document.getElementById('chat-input');
-        if (!chatInput || !chatInput.value.trim()) return;
-        
-        const message = chatInput.value.trim();
-        this.addChatMessage('user', message);
-        chatInput.value = '';
-        
-        // Reset retry count for new message
-        this.retryCount = 0;
-        
-        // Call AI response handler
-        this.handleAIResponse(message);
-    }
-    
-    // REAL AI INTEGRATION - This replaces the old hardcoded responses
-    async handleAIResponse(userMessage) {
-        // Prevent multiple simultaneous requests
-        if (this.isAiTyping) {
-            console.log('AI is already processing a message');
-            return;
-        }
-        
-        this.isAiTyping = true;
-        
-        // Show typing indicator
-        const typingMessage = this.addChatMessage('ai', '🤖 Kira is thinking...');
-        typingMessage.classList.add('typing-message');
-        
-        try {
-            // Ensure we have a session ID
-            if (!this.sessionId) {
-                this.sessionId = this.generateSessionId();
-            }
-            
-            console.log('💬 Sending message to AI:', userMessage);
-            console.log('🔗 Backend URL:', this.backendUrl);
-            
-            // Call your AI backend
-            const response = await fetch(`${this.backendUrl}/api/chat`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify({
-                    message: userMessage.trim(),
-                    sessionId: this.sessionId
-                }),
-                // Add timeout to prevent hanging
-                signal: AbortSignal.timeout(30000) // 30 second timeout
-            });
-            
-            console.log('📡 AI Response status:', response.status);
-            
-            if (!response.ok) {
-                throw new Error(`Server responded with ${response.status}: ${response.statusText}`);
-            }
-            
-            const data = await response.json();
-            console.log('✅ AI Response data:', data);
-            
-            // Remove typing indicator
-            this.removeChatMessage(typingMessage);
-            
-            // Add AI response
-            this.addChatMessage('ai', data.reply);
-            
-            // Update session ID if provided
-            if (data.sessionId) {
-                this.sessionId = data.sessionId;
-            }
-            
-            // Reset retry count on success
-            this.retryCount = 0;
-            
-        } catch (error) {
-            console.error('❌ AI Backend Error:', error);
-            
-            // Remove typing indicator
-            this.removeChatMessage(typingMessage);
-            
-            // Determine error type and provide appropriate fallback
-            let fallbackMessage = this.getFallbackMessage(error);
-            
-            // Add fallback message
-            this.addChatMessage('ai', fallbackMessage);
-            
-            // Add retry functionality for network errors
-            if (this.shouldRetry(error)) {
-                this.addRetryButton(userMessage);
-            }
-            
-        } finally {
-            this.isAiTyping = false;
-        }
-    }
-    
-    // Helper method to generate session IDs
-    generateSessionId() {
-        const timestamp = Date.now();
-        const random = Math.random().toString(36).substr(2, 9);
-        const sessionId = `kwalifai_${timestamp}_${random}`;
-        
-        console.log('🆔 Generated new session ID:', sessionId);
-        return sessionId;
-    }
-    
-    // Helper method to safely remove chat messages
-    removeChatMessage(messageElement) {
-        if (messageElement && messageElement.parentNode) {
-            messageElement.parentNode.removeChild(messageElement);
-        }
-    }
-    
-    // Enhanced addChatMessage that returns the message element
-    addChatMessage(sender, text) {
-        const chatMessages = document.getElementById('chat-messages');
-        if (!chatMessages) return null;
-        
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `chat-message ${sender}`;
-        
-        const messageContent = document.createElement('div');
-        messageContent.className = 'message-content';
-        messageContent.textContent = text;
-        
-        messageDiv.appendChild(messageContent);
-        chatMessages.appendChild(messageDiv);
-        
-        // Scroll to bottom
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-        
-        // Return the message element so it can be removed later if needed
-        return messageDiv;
-    }
-    
-    // Get appropriate fallback message based on error type
-    getFallbackMessage(error) {
-        if (error.name === 'TimeoutError') {
-            return "I'm taking a bit longer to respond than usual. This might be due to high demand. Please try again, or I can connect you with one of our licensed loan officers for immediate assistance at (555) 123-4567.";
-        } else if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
-            return "I'm having trouble connecting to my AI services right now. This could be a temporary network issue. Please try refreshing the page and chatting again, or contact our loan officers directly at (555) 123-4567 for immediate assistance.";
-        } else if (error.message.includes('500')) {
-            return "I'm experiencing some technical difficulties at the moment. Our licensed loan officers are standing by to help with all your mortgage questions! Call (555) 123-4567 or try chatting again in a few minutes.";
-        } else if (error.message.includes('401') || error.message.includes('403')) {
-            return "There seems to be an authentication issue with my AI services. Please contact our technical support or speak directly with our licensed loan officers at (555) 123-4567.";
-        } else {
-            return "I apologize, but I'm having technical difficulties right now. Let me connect you with one of our licensed loan officers who can provide immediate assistance with your mortgage needs. Call (555) 123-4567 or try chatting again in a moment.";
-        }
-    }
-    
-    // Determine if we should offer retry functionality
-    shouldRetry(error) {
-        const retryableErrors = ['Failed to fetch', 'NetworkError', 'TimeoutError', '500', '502', '503', '504'];
-        return retryableErrors.some(errorType => 
-            error.message.includes(errorType) || error.name === errorType
-        ) && this.retryCount < this.maxRetries;
-    }
-    
-    // Add retry button for failed messages
-    addRetryButton(originalMessage) {
-        const chatMessages = document.getElementById('chat-messages');
-        if (!chatMessages) return;
-        
-        const retryContainer = document.createElement('div');
-        retryContainer.className = 'chat-message ai retry-container';
-        retryContainer.innerHTML = `
-            <div class="message-content">
-                <button class="retry-button" onclick="window.kwalifaiApp.retryMessage('${originalMessage.replace(/'/g, "\\'")}')">
-                    🔄 Try Again
-                </button>
-                <button class="contact-button" onclick="window.location.href='tel:5551234567'">
-                    📞 Call Now: (555) 123-4567
-                </button>
-            </div>
-        `;
-        
-        chatMessages.appendChild(retryContainer);
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-    
-    // Retry failed message
-    async retryMessage(message) {
-        // Remove retry button
-        const retryContainer = document.querySelector('.retry-container');
-        if (retryContainer) {
-            retryContainer.remove();
-        }
-        
-        // Increment retry count
-        this.retryCount++;
-        
-        console.log(`🔄 Retrying message (attempt ${this.retryCount}):`, message);
-        
-        // Retry the AI response
-        await this.handleAIResponse(message);
-    }
-    
-    // File upload handling with AI integration
-    handleFileUpload(files) {
-        if (!files || files.length === 0) return;
-        
-        Array.from(files).forEach(file => {
-            // Validate file type and size
-            const allowedTypes = [
-                'application/pdf', 
-                'image/jpeg', 
-                'image/png', 
-                'application/msword', 
-                'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'application/vnd.ms-excel',
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-            ];
-            const maxSize = 10 * 1024 * 1024; // 10MB
-            
-            if (!allowedTypes.includes(file.type)) {
-                this.addChatMessage('ai', `I'm sorry, but I can't process ${file.type} files. Please upload PDF, JPG, PNG, DOC, DOCX, XLS, or XLSX files.`);
-                return;
-            }
-            
-            if (file.size > maxSize) {
-                this.addChatMessage('ai', `The file "${file.name}" is too large. Please upload files under 10MB.`);
-                return;
-            }
-            
-            // Simulate file processing
-            this.addChatMessage('user', `📎 Uploaded: ${file.name}`);
-            
-            setTimeout(() => {
-                const documentType = this.identifyDocumentType(file.name);
-                const responseMessage = `Great! I've received your ${documentType}. I'm analyzing it now using AI. This will help speed up your qualification process. Based on this document, let me ask you a few follow-up questions to ensure we have everything needed for your qualification.`;
-                
-                this.addChatMessage('ai', responseMessage);
-                
-                // Trigger AI response with document context
-                setTimeout(() => {
-                    this.handleAIResponse(`I uploaded a ${documentType} file named ${file.name}. What questions do you have about this document?`);
-                }, 1000);
-            }, 1500);
+    // Filter buttons
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const filter = this.getAttribute('data-filter');
+            setActiveFilter(filter);
+            filterArticles(filter);
         });
-    }
+    });
     
-    // Identify document type from filename
-    identifyDocumentType(filename) {
-        const lower = filename.toLowerCase();
-        if (lower.includes('w2') || lower.includes('w-2')) {
-            return 'W-2 form';
-        } else if (lower.includes('paystub') || lower.includes('pay_stub') || lower.includes('payroll')) {
-            return 'pay stub';
-        } else if (lower.includes('bank') || lower.includes('statement')) {
-            return 'bank statement';
-        } else if (lower.includes('tax') || lower.includes('1040')) {
-            return 'tax return';
-        } else if (lower.includes('credit') || lower.includes('score')) {
-            return 'credit report';
-        } else {
-            return 'document';
-        }
-    }
+    // Category cards
+    const categoryCards = document.querySelectorAll('.category-card');
+    categoryCards.forEach(function(card) {
+        card.addEventListener('click', function(e) {
+            e.preventDefault();
+            const category = this.getAttribute('data-category');
+            setActiveFilter(category);
+            filterArticles(category);
+            scrollToNewsSection();
+        });
+    });
     
-    // News methods (unchanged from original)
-    renderNews() {
-        this.renderFeaturedArticle();
-        this.renderArticlesGrid();
-    }
+    // Topic tags
+    const topicTags = document.querySelectorAll('.topic-tag');
+    topicTags.forEach(function(tag) {
+        tag.addEventListener('click', function(e) {
+            e.preventDefault();
+            const topic = this.getAttribute('data-topic');
+            searchArticlesByTopic(topic);
+        });
+    });
     
-    renderFeaturedArticle() {
-        const featuredContainer = document.getElementById('featured-article');
-        if (!featuredContainer) return;
-        
-        const featuredArticle = this.filteredArticles.find(article => article.featured) || this.filteredArticles[0];
-        if (!featuredArticle) return;
-        
-        featuredContainer.innerHTML = `
-            <div class="featured-article__content">
-                <div class="article-card__meta">
-                    <span class="article-card__source">${featuredArticle.publication}</span>
-                    <span class="article-card__date">${this.formatDate(featuredArticle.publishDate)}</span>
-                </div>
-                <h2 class="article-card__title">${featuredArticle.headline}</h2>
-                <p class="article-card__summary">${featuredArticle.aiSummary}</p>
-                <div class="article-card__footer">
-                    <div class="article-card__tags">
-                        ${featuredArticle.tags.map(tag => `<span class="article-tag">${tag}</span>`).join('')}
-                    </div>
-                    <div class="sentiment-indicator ${featuredArticle.sentiment}">
-                        <span class="sentiment-dot"></span>
-                        ${featuredArticle.sentiment}
-                    </div>
-                </div>
-                <a href="${featuredArticle.originalUrl}" class="btn btn--primary" target="_blank" rel="noopener">
-                    Read Full Article
-                </a>
-            </div>
-        `;
-    }
-    
-    renderArticlesGrid() {
-        const gridContainer = document.getElementById('articles-grid');
-        if (!gridContainer) return;
-        
-        const regularArticles = this.filteredArticles.filter(article => !article.featured);
-        
-        if (regularArticles.length === 0) {
-            gridContainer.innerHTML = `
-                <div class="no-results">
-                    <h3>No articles found</h3>
-                    <p>Try adjusting your search terms or filters.</p>
-                </div>
-            `;
-            return;
-        }
-        
-        gridContainer.innerHTML = regularArticles.map(article => `
-            <div class="article-card">
-                <div class="article-card__meta">
-                    <span class="article-card__source">${article.publication}</span>
-                    <span class="article-card__date">${this.formatDate(article.publishDate)}</span>
-                </div>
-                <h3 class="article-card__title">${article.headline}</h3>
-                <p class="article-card__summary">${article.aiSummary}</p>
-                <div class="article-card__footer">
-                    <div class="article-card__tags">
-                        ${article.tags.slice(0, 2).map(tag => `<span class="article-tag">${tag}</span>`).join('')}
-                    </div>
-                    <div class="article-card__actions">
-                        <span class="sentiment-indicator ${article.sentiment}">
-                            <span class="sentiment-dot"></span>
-                            ${article.sentiment}
-                        </span>
-                        <a href="${article.originalUrl}" class="btn btn--outline" target="_blank" rel="noopener">
-                            Read More
-                        </a>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-    }
-    
-    applyNewsFilters() {
-        let filtered = [...this.newsArticles];
-        
-        // Apply category filter
-        if (this.currentNewsFilter !== 'all') {
-            filtered = filtered.filter(article => article.category === this.currentNewsFilter);
-        }
-        
-        // Apply search filter
-        if (this.newsSearchQuery) {
-            filtered = filtered.filter(article =>
-                article.headline.toLowerCase().includes(this.newsSearchQuery) ||
-                article.aiSummary.toLowerCase().includes(this.newsSearchQuery) ||
-                article.tags.some(tag => tag.toLowerCase().includes(this.newsSearchQuery)) ||
-                article.author.toLowerCase().includes(this.newsSearchQuery) ||
-                article.publication.toLowerCase().includes(this.newsSearchQuery)
-            );
-        }
-        
-        this.filteredArticles = filtered;
-        
-        if (this.currentPage === 'news') {
-            this.renderNews();
-        }
-    }
-    
-    loadMoreNews() {
-        console.log('Loading more articles...');
-        
-        const loadMoreBtn = document.getElementById('load-more-news');
-        if (loadMoreBtn) {
-            loadMoreBtn.textContent = 'Loading...';
-            
-            setTimeout(() => {
-                loadMoreBtn.textContent = 'Load More Articles';
-            }, 1500);
-        }
-    }
-    
-    // Utility methods
-    formatDate(dateString) {
-        const date = new Date(dateString);
-        const today = new Date();
-        const yesterday = new Date(today);
-        yesterday.setDate(yesterday.getDate() - 1);
-        
-        if (date.toDateString() === today.toDateString()) {
-            return 'Today';
-        } else if (date.toDateString() === yesterday.toDateString()) {
-            return 'Yesterday';
-        } else {
-            return date.toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                year: date.getFullYear() !== today.getFullYear() ? 'numeric' : undefined
-            });
-        }
-    }
-    
-    scrollToSection(sectionId) {
-        const section = document.getElementById(sectionId);
-        if (section) {
-            const headerOffset = document.querySelector('.rate-banner.show') ? 140 : 80;
-            const elementPosition = section.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-            
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: 'smooth'
-            });
-        }
+    // Load more button
+    const loadMoreBtn = document.getElementById('loadMore');
+    if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            loadMoreArticles();
+        });
     }
 }
 
-// Global navigation function for onclick handlers
+function setupChatEvents() {
+    console.log('Setting up chat events...');
+    
+    const closeKira = document.getElementById('closeKira');
+    const kiraOverlay = document.getElementById('kiraOverlay');
+    const sendMessage = document.getElementById('sendMessage');
+    const chatInput = document.getElementById('chatInput');
+    const uploadDocs = document.getElementById('uploadDocs');
+    const scheduleCall = document.getElementById('scheduleCall');
+    
+    if (closeKira) {
+        closeKira.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeKiraChat();
+        });
+    }
+    
+    if (kiraOverlay) {
+        kiraOverlay.addEventListener('click', function(e) {
+            e.preventDefault();
+            closeKiraChat();
+        });
+    }
+    
+    if (sendMessage) {
+        sendMessage.addEventListener('click', function(e) {
+            e.preventDefault();
+            handleChatMessage();
+        });
+    }
+    
+    if (chatInput) {
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleChatMessage();
+            }
+        });
+    }
+    
+    if (uploadDocs) {
+        uploadDocs.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Document upload feature would open secure file upload interface. NMLS ID: 1666674');
+        });
+    }
+    
+    if (scheduleCall) {
+        scheduleCall.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('Schedule call feature would open calendar booking system with licensed loan officers.');
+        });
+    }
+}
+
+function setupGlobalEvents() {
+    // Escape key to close modals
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            closeSearchModal();
+            closeKiraChat();
+        }
+    });
+    
+    // Update rates periodically
+    setInterval(updateRateBanner, 5 * 60 * 1000); // Every 5 minutes
+}
+
+// Navigation Functions
 function navigateToPage(page) {
-    if (window.kwalifaiApp) {
-        window.kwalifaiApp.navigateToPage(page);
+    console.log('Navigating to page:', page);
+    
+    // Hide all pages
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(function(p) {
+        p.classList.add('hidden');
+    });
+    
+    // Show target page
+    const targetPage = document.getElementById(page + 'Page');
+    if (targetPage) {
+        targetPage.classList.remove('hidden');
+        console.log('Showing page:', page);
+    } else {
+        console.error('Page not found:', page + 'Page');
+    }
+    
+    // Update nav links
+    const navLinks = document.querySelectorAll('.nav__link');
+    navLinks.forEach(function(link) {
+        const linkPage = link.getAttribute('data-page');
+        if (linkPage === page) {
+            link.classList.add('active');
+        } else {
+            link.classList.remove('active');
+        }
+    });
+    
+    currentPage = page;
+    
+    // Initialize page-specific functionality
+    if (page === 'news') {
+        displayArticles();
+    }
+    
+    // Scroll to top
+    window.scrollTo(0, 0);
+}
+
+// Rate Banner Functions
+function updateRateBanner() {
+    // Simulate real-time rate updates with base rates from data
+    const rates = {
+        '30-year': (7.125 + Math.random() * 0.1 - 0.05).toFixed(3),
+        '15-year': (6.750 + Math.random() * 0.1 - 0.05).toFixed(3),
+        '5-1-arm': (6.375 + Math.random() * 0.1 - 0.05).toFixed(3)
+    };
+    
+    const rateElements = document.querySelectorAll('.rate-value');
+    if (rateElements.length >= 3) {
+        rateElements[0].textContent = rates['30-year'] + '%';
+        rateElements[1].textContent = rates['15-year'] + '%';
+        rateElements[2].textContent = rates['5-1-arm'] + '%';
     }
 }
 
-// Initialize the application when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    window.kwalifaiApp = new KwalifaiApp();
-    console.log('🤖 Kwalifai AI-powered website ready!');
-});
+function hideRateBanner() {
+    const rateBanner = document.getElementById('rateBanner');
+    if (rateBanner) {
+        rateBanner.classList.add('hidden');
+        // Adjust header position
+        const header = document.querySelector('.header');
+        if (header) {
+            header.style.top = '0';
+            header.style.marginTop = '0';
+        }
+    }
+}
 
-// Enhanced error handling for the entire application
-window.addEventListener('error', (event) => {
-    console.error('Global error caught:', event.error);
-    // Don't break the app on errors
-});
+// Chat Functions
+function openKiraChat() {
+    console.log('Opening Kira chat...');
+    const kiraModal = document.getElementById('kiraModal');
+    if (kiraModal) {
+        kiraModal.classList.remove('hidden');
+        initializeChat();
+        console.log('Kira chat opened');
+    } else {
+        console.error('Kira modal not found');
+    }
+}
 
-window.addEventListener('unhandledrejection', (event) => {
-    console.error('Unhandled promise rejection:', event.reason);
-    // Don't break the app on promise rejections
-});
+function closeKiraChat() {
+    const kiraModal = document.getElementById('kiraModal');
+    if (kiraModal) {
+        kiraModal.classList.add('hidden');
+    }
+}
+
+function initializeChat() {
+    chatMessages = [];
+    const chatMessagesDiv = document.getElementById('chatMessages');
+    if (chatMessagesDiv) {
+        chatMessagesDiv.innerHTML = `
+            <div class="chat__message chat__message--kira">
+                <div class="chat__avatar">K</div>
+                <div class="chat__content">
+                    <p>${kiraFlows.greeting.message}</p>
+                    <div class="chat__options">
+                        ${kiraFlows.greeting.options.map(function(option) {
+                            return `<button class="btn btn--sm btn--outline" onclick="handleChatOption('greeting', '${option}')">${option}</button>`;
+                        }).join('')}
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+}
+
+function handleChatMessage() {
+    const chatInput = document.getElementById('chatInput');
+    const message = chatInput.value.trim();
+    
+    if (!message) return;
+    
+    addChatMessage('user', message);
+    chatInput.value = '';
+    
+    // Simulate AI response
+    setTimeout(function() {
+        const response = generateKiraResponse(message);
+        addChatMessage('kira', response);
+    }, 1000);
+}
+
+// Global function for chat options
+window.handleChatOption = function(flow, option) {
+    addChatMessage('user', option);
+    
+    setTimeout(function() {
+        let nextFlow, response;
+        
+        switch(flow) {
+            case 'greeting':
+                if (option === 'Purchase') {
+                    response = kiraFlows.purchase.message;
+                    nextFlow = 'purchase';
+                } else if (option === 'Refinance') {
+                    response = kiraFlows.refinance.message;
+                    nextFlow = 'refinance';
+                } else {
+                    response = kiraFlows.exploring.message;
+                    nextFlow = 'exploring';
+                }
+                break;
+            case 'purchase':
+            case 'refinance':
+                response = kiraFlows.income_next.message;
+                nextFlow = 'income_next';
+                break;
+            case 'income_next':
+                response = kiraFlows.qualification_complete.message;
+                nextFlow = 'qualification_complete';
+                break;
+            case 'qualification_complete':
+                if (option === 'Yes, connect me') {
+                    response = kiraFlows.handoff.message;
+                    nextFlow = 'handoff';
+                } else {
+                    response = "I understand. Feel free to reach out when you're ready. Our licensed loan officers are here to help with personalized rate quotes. Remember, we're licensed in all 50 states (NMLS ID: 1666674).";
+                    nextFlow = null;
+                }
+                break;
+            default:
+                response = "Thank you for chatting with Kwalifai! Our licensed professionals are ready to help you with personalized mortgage solutions.";
+                nextFlow = null;
+        }
+        
+        addChatMessage('kira', response, nextFlow);
+    }, 1000);
+};
+
+function addChatMessage(sender, message, nextFlow) {
+    const chatMessagesDiv = document.getElementById('chatMessages');
+    const isKira = sender === 'kira';
+    
+    const messageHTML = `
+        <div class="chat__message ${isKira ? 'chat__message--kira' : 'chat__message--user'}">
+            <div class="chat__avatar">${isKira ? 'K' : 'U'}</div>
+            <div class="chat__content">
+                <p>${message}</p>
+                ${nextFlow && kiraFlows[nextFlow] && kiraFlows[nextFlow].options ? `
+                    <div class="chat__options">
+                        ${kiraFlows[nextFlow].options.map(function(option) {
+                            return `<button class="btn btn--sm btn--outline" onclick="handleChatOption('${nextFlow}', '${option}')">${option}</button>`;
+                        }).join('')}
+                    </div>
+                ` : ''}
+            </div>
+        </div>
+    `;
+    
+    if (chatMessagesDiv) {
+        chatMessagesDiv.insertAdjacentHTML('beforeend', messageHTML);
+        chatMessagesDiv.scrollTop = chatMessagesDiv.scrollHeight;
+    }
+}
+
+function generateKiraResponse(message) {
+    const lowerMessage = message.toLowerCase();
+    
+    if (lowerMessage.includes('rate') || lowerMessage.includes('interest')) {
+        return "Current rates vary based on your credit profile and loan details. Our licensed loan officers provide personalized rate quotes after reviewing your information. NMLS ID: 1666674. Would you like me to connect you with one of our professionals?";
+    } else if (lowerMessage.includes('qualify') || lowerMessage.includes('qualification')) {
+        return "I can help you understand qualification requirements! Generally, we look at income, credit score, debt-to-income ratio, and down payment. Would you like to start the qualification process?";
+    } else if (lowerMessage.includes('document') || lowerMessage.includes('paperwork')) {
+        return "Our secure document upload system accepts pay stubs, tax returns, bank statements, and other verification documents. All data is encrypted and handled according to banking security standards.";
+    } else {
+        return "I'm here to help with your mortgage questions! I focus on qualification - our licensed professionals handle all rate decisions and quotes. What would you like to know about the mortgage process?";
+    }
+}
+
+// News Functions
+function openSearchModal() {
+    const searchModal = document.getElementById('searchModal');
+    if (searchModal) {
+        searchModal.classList.remove('hidden');
+        const searchInput = document.getElementById('searchInput');
+        if (searchInput) {
+            searchInput.focus();
+        }
+    }
+}
+
+function closeSearchModal() {
+    const searchModal = document.getElementById('searchModal');
+    if (searchModal) {
+        searchModal.classList.add('hidden');
+    }
+}
+
+function handleSearch() {
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const publicationFilter = document.getElementById('publicationFilter');
+    
+    const query = searchInput ? searchInput.value.trim() : '';
+    const category = categoryFilter ? categoryFilter.value : '';
+    const publication = publicationFilter ? publicationFilter.value : '';
+    
+    if (!query && !category && !publication) {
+        alert('Please enter a search term or select filters.');
+        return;
+    }
+    
+    searchResults = allArticles.filter(function(article) {
+        const matchesQuery = !query || 
+            article.headline.toLowerCase().includes(query.toLowerCase()) ||
+            article.aiSummary.toLowerCase().includes(query.toLowerCase()) ||
+            article.tags.some(function(tag) {
+                return tag.toLowerCase().includes(query.toLowerCase());
+            });
+        
+        const matchesCategory = !category || article.category === category;
+        
+        const matchesPublication = !publication || 
+            article.publication.toLowerCase().replace(/\s+/g, '-').includes(publication.toLowerCase());
+        
+        return matchesQuery && matchesCategory && matchesPublication;
+    });
+    
+    isSearchMode = true;
+    articlesDisplayed = 6;
+    displaySearchResults();
+    closeSearchModal();
+    scrollToNewsSection();
+}
+
+function searchArticlesByTopic(topic) {
+    searchResults = allArticles.filter(function(article) {
+        return article.tags.some(function(tag) {
+            return tag.toLowerCase().includes(topic.toLowerCase());
+        }) ||
+        article.headline.toLowerCase().includes(topic.toLowerCase()) ||
+        article.aiSummary.toLowerCase().includes(topic.toLowerCase());
+    });
+    
+    isSearchMode = true;
+    articlesDisplayed = 6;
+    displaySearchResults();
+    scrollToNewsSection();
+}
+
+function displaySearchResults() {
+    const newsGrid = document.getElementById('newsGrid');
+    if (!newsGrid) return;
+    
+    if (searchResults.length === 0) {
+        newsGrid.innerHTML = `
+            <div class="no-results">
+                <h3>No articles found</h3>
+                <p>Try adjusting your search criteria or browse by category.</p>
+                <button class="btn btn--primary" onclick="clearSearch()">View All Articles</button>
+            </div>
+        `;
+        updateLoadMoreButton(false);
+        return;
+    }
+    
+    const articles = searchResults.slice(0, articlesDisplayed);
+    newsGrid.innerHTML = articles.map(createArticleCard).join('');
+    updateLoadMoreButton(searchResults.length > articlesDisplayed);
+}
+
+// Global function for clearing search
+window.clearSearch = function() {
+    isSearchMode = false;
+    searchResults = [];
+    articlesDisplayed = 6;
+    setActiveFilter('all');
+    filterArticles('all');
+    
+    // Clear search inputs
+    const searchInput = document.getElementById('searchInput');
+    const categoryFilter = document.getElementById('categoryFilter');
+    const publicationFilter = document.getElementById('publicationFilter');
+    
+    if (searchInput) searchInput.value = '';
+    if (categoryFilter) categoryFilter.value = '';
+    if (publicationFilter) publicationFilter.value = '';
+};
+
+function setActiveFilter(filter) {
+    currentFilter = filter;
+    articlesDisplayed = 6;
+    isSearchMode = false;
+    searchResults = [];
+    
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    filterButtons.forEach(function(btn) {
+        const btnFilter = btn.getAttribute('data-filter');
+        if (btnFilter === filter) {
+            btn.classList.add('active');
+        } else {
+            btn.classList.remove('active');
+        }
+    });
+}
+
+function filterArticles(filter) {
+    let filteredArticles;
+    
+    if (filter === 'all') {
+        filteredArticles = allArticles;
+    } else {
+        filteredArticles = allArticles.filter(function(article) {
+            return article.category === filter;
+        });
+    }
+    
+    const articles = filteredArticles.slice(0, articlesDisplayed);
+    const newsGrid = document.getElementById('newsGrid');
+    if (newsGrid) {
+        newsGrid.innerHTML = articles.map(createArticleCard).join('');
+    }
+    
+    updateLoadMoreButton(filteredArticles.length > articlesDisplayed);
+}
+
+function displayArticles() {
+    filterArticles(currentFilter);
+}
+
+function loadMoreArticles() {
+    articlesDisplayed += 3;
+    
+    if (isSearchMode && searchResults.length > 0) {
+        displaySearchResults();
+    } else {
+        filterArticles(currentFilter);
+    }
+}
+
+function createArticleCard(article) {
+    const formatDate = function(dateStr) {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-US', { 
+            month: 'short', 
+            day: 'numeric', 
+            year: 'numeric' 
+        });
+    };
+
+    return `
+        <div class="news-card" data-category="${article.category}">
+            <div class="news-card__header">
+                <div class="news-card__meta">
+                    <span class="news-card__source">${article.publication}</span>
+                    <span class="news-card__date">${formatDate(article.publishDate)}</span>
+                </div>
+                <h3 class="news-card__title">${article.headline}</h3>
+            </div>
+            <div class="news-card__body">
+                <p class="news-card__summary">${article.aiSummary}</p>
+                <div class="news-card__tags">
+                    ${article.tags.slice(0, 3).map(function(tag) {
+                        return `<span class="tag tag--neutral">${tag}</span>`;
+                    }).join('')}
+                </div>
+                <div class="news-card__footer">
+                    <span class="sentiment-indicator sentiment-indicator--${article.sentiment}">
+                        ${article.sentiment.charAt(0).toUpperCase() + article.sentiment.slice(1)}
+                    </span>
+                    <a href="${article.originalUrl}" target="_blank" class="btn btn--sm btn--outline">
+                        Read Article
+                    </a>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+function updateLoadMoreButton(show) {
+    const loadMoreBtn = document.getElementById('loadMore');
+    if (loadMoreBtn) {
+        loadMoreBtn.style.display = show ? 'block' : 'none';
+    }
+}
+
+function scrollToNewsSection() {
+    const newsSection = document.querySelector('.news-feed');
+    if (newsSection) {
+        newsSection.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'start' 
+        });
+    }
+}
+
+// Utility Functions
+function simulateRealTimeUpdates() {
+    // Simulate new articles every 30 minutes
+    setInterval(function() {
+        const newArticleCount = Math.floor(Math.random() * 3) + 1;
+        updateArticleCount('.category-card__count', newArticleCount);
+    }, 30 * 60 * 1000);
+}
+
+function updateArticleCount(selector, increment) {
+    const countElements = document.querySelectorAll(selector);
+    countElements.forEach(function(element) {
+        const currentCount = parseInt(element.textContent.match(/\d+/)[0]);
+        const newCount = currentCount + increment;
+        element.textContent = element.textContent.replace(/\d+/, newCount);
+    });
+}
+
+// Initialize real-time updates
+setTimeout(simulateRealTimeUpdates, 1000);
+
+// Export functions for potential external use
+window.KwalifaiApp = {
+    navigateToPage: navigateToPage,
+    openKiraChat: openKiraChat,
+    selectCategory: function(categoryId) {
+        navigateToPage('news');
+        setTimeout(function() {
+            setActiveFilter(categoryId);
+            filterArticles(categoryId);
+            scrollToNewsSection();
+        }, 100);
+    },
+    searchArticles: function(query) {
+        navigateToPage('news');
+        setTimeout(function() {
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.value = query;
+                handleSearch();
+            }
+        }, 100);
+    }
+};
